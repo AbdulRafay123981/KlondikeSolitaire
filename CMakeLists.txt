@@ -24,3 +24,12 @@ add_executable(DeckTest
 target_include_directories(DeckTest PRIVATE include)
 
 add_test(NAME DeckFunctionalityTest COMMAND DeckTest)
+
+
+add_executable(StackTest
+    tests/stack_test.cpp
+)
+
+target_include_directories(StackTest PRIVATE include)
+
+add_test(NAME StackFunctionalityTest COMMAND StackTest)
