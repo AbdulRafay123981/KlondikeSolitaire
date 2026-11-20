@@ -105,3 +105,12 @@ add_executable(DrawModeTest
 )
 target_include_directories(DrawModeTest PRIVATE include)
 add_test(NAME DrawModeTest COMMAND DrawModeTest)
+
+
+add_executable(CardLocationTest
+    tests/card_location_test.cpp
+    src/GameBoard.cpp
+    src/Deck.cpp
+)
+target_include_directories(CardLocationTest PRIVATE include)
+add_test(NAME CardLocationConsistencyTest COMMAND CardLocationTest)

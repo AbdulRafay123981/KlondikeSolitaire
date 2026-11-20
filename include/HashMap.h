@@ -81,6 +81,25 @@ public:
     return nullptr;
   }
 
+  const V *search(int key) const {
+    int index = hash1(key);
+    int step = hash2(key);
+
+    for (int i = 0; i < Capacity; i++) {
+      int current = (index + i * step) % Capacity;
+
+      if (table[current].state == 0) {
+        return nullptr;
+      }
+
+      if (table[current].state == 1 && table[current].key == key) {
+        return &table[current].value;
+      }
+    }
+
+    return nullptr;
+  }
+
   bool remove(int key) {
     int index = hash1(key);
     int step = hash2(key);

@@ -41,6 +41,22 @@ public:
     return items[topIndex];
   }
 
+  T &at(int index) {
+    if (index < 0 || index >= size()) {
+      throw std::out_of_range("Invalid stack index.");
+    }
+
+    return items[index];
+  }
+
+  const T &at(int index) const {
+    if (index < 0 || index >= size()) {
+      throw std::out_of_range("Invalid stack index.");
+    }
+
+    return items[index];
+  }
+
   bool isEmpty() const { return topIndex == -1; }
 
   bool isFull() const { return topIndex == Capacity - 1; }

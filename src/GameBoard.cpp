@@ -409,6 +409,79 @@ CardLocation *GameBoard::getCardLocation(int cardId) {
   return cardLocations.search(cardId);
 }
 
+bool GameBoard::validateCardLocations() const {
+  if (cardLocations.size() != 52) {
+    return false;
+  }
+
+  bool seen[52] = {};
+
+  auto checkCard = [&](const Card &card, PileType expectedPile,
+                       int expectedPileIndex, int expectedPosition) {
+    int cardId = getCardId(card);
+
+    if (cardId < 0 || cardId >= 52 || seen[cardId]) {
+      return false;
+    }
+
+    seen[cardId] = true;
+
+    const CardLocation *location = cardLocations.search(cardId);
+
+    if (location == nullptr) {
+      return false;
+    }
+
+    return location->pile == expectedPile &&
+           location->pileIndex == expectedPileIndex &&
+           location->position == expectedPosition &&
+           location->faceUp == card.isFaceUp();
+  };
+
+  // Check all tableau cards.
+  for (int column = 0; column < 7; column++) {
+    for (int position = 0; position < tableau[column].size(); position++) {
+      if (!checkCard(tableau[column].getAt(position), PileType::Tableau, column,
+                     position)) {
+        return false;
+      }
+    }
+  }
+
+  // Check all stock cards.
+  for (int position = 0; position < stock.size(); position++) {
+    if (!checkCard(stock.at(position), PileType::Stock, 0, position)) {
+      return false;
+    }
+  }
+
+  // Check all waste cards.
+  for (int position = 0; position < waste.size(); position++) {
+    if (!checkCard(waste.at(position), PileType::Waste, 0, position)) {
+      return false;
+    }
+  }
+
+  // Check all foundation cards.
+  for (int suit = 0; suit < 4; suit++) {
+    for (int position = 0; position < foundations[suit].size(); position++) {
+      if (!checkCard(foundations[suit].at(position), PileType::Foundation, suit,
+                     position)) {
+        return false;
+      }
+    }
+  }
+
+  // Ensure every card ID from 0 through 51 was found.
+  for (int cardId = 0; cardId < 52; cardId++) {
+    if (!seen[cardId]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 void GameBoard::display() {
   std::cout << "\n========== KLONDIKE SOLITAIRE ==========\n\n";
 

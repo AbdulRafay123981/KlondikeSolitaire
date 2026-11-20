@@ -128,6 +128,20 @@ public:
     return current->data;
   }
 
+  const T &getAt(int index) const {
+    if (index < 0 || index >= count) {
+      throw std::out_of_range("Invalid linked list index.");
+    }
+
+    const Node *current = head;
+
+    for (int i = 0; i < index; i++) {
+      current = current->next;
+    }
+
+    return current->data;
+  }
+
   int size() const { return count; }
 
   bool isEmpty() const { return head == nullptr; }
