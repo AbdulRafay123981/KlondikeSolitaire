@@ -2,6 +2,7 @@
 #define LINKEDLIST_H
 
 #include <stdexcept>
+#include <utility>
 
 template <typename T> class LinkedList {
 private:
@@ -15,13 +16,40 @@ private:
   Node *head = nullptr;
   int count = 0;
 
+  void copyNodes(const LinkedList &other) {
+    Node **nextLink = &head;
+
+    try {
+      for (Node *current = other.head; current != nullptr;
+           current = current->next) {
+        *nextLink = new Node(current->data);
+        nextLink = &((*nextLink)->next);
+        count++;
+      }
+    } catch (...) {
+      clear();
+      throw;
+    }
+  }
+
 public:
   LinkedList() = default;
 
-  ~LinkedList() { clear(); }
+  // Copy constructor: creates an independent copy.
+  LinkedList(const LinkedList &other) { copyNodes(other); }
 
-  LinkedList(const LinkedList &) = delete;
-  LinkedList &operator=(const LinkedList &) = delete;
+  // Copy assignment: safely replaces the current list.
+  LinkedList &operator=(const LinkedList &other) {
+    if (this != &other) {
+      LinkedList copy(other);
+      std::swap(head, copy.head);
+      std::swap(count, copy.count);
+    }
+
+    return *this;
+  }
+
+  ~LinkedList() { clear(); }
 
   void pushFront(const T &item) {
     Node *newNode = new Node(item);
