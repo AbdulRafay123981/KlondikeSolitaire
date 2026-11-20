@@ -1,5 +1,6 @@
 #ifndef DECK_H
 #define DECK_H
+
 #include "Card.h"
 
 class Deck {
@@ -9,6 +10,7 @@ private:
 
 public:
   Deck();
+
   void shuffle();
   Card draw();
   bool isEmpty() const;
