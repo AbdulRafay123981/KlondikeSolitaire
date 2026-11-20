@@ -33,3 +33,11 @@ add_executable(StackTest
 target_include_directories(StackTest PRIVATE include)
 
 add_test(NAME StackFunctionalityTest COMMAND StackTest)
+
+add_executable(QueueTest
+    tests/queue_test.cpp
+)
+
+target_include_directories(QueueTest PRIVATE include)
+
+add_test(NAME QueueFunctionalityTest COMMAND QueueTest)
