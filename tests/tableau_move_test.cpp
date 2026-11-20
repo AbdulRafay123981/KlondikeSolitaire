@@ -51,10 +51,9 @@ int main() {
             assert(location->faceUp);
 
             // Moving the visible card should reveal the next card.
-            if (sourceSize > 2) {
-              assert(board.getTableauCard(source, 1).isFaceUp());
+            if (position == 0 && sourceSize > 1) {
+              assert(board.getTableauCard(source, 0).isFaceUp());
             }
-
             // All cards must still be accounted for.
             int total = board.getStockSize() + board.getWasteSize();
 

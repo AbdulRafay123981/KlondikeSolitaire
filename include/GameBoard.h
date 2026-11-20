@@ -40,6 +40,10 @@ public:
   bool moveTableauSequence(int sourceColumn, int sourcePosition,
                            int destinationColumn);
 
+  bool moveTableauToFoundation(int sourceColumn);
+  bool moveWasteToTableau(int destinationColumn);
+  bool moveWasteToFoundation();
+
   int getTableauSize(int column) const;
   Card &getTableauCard(int column, int position);
 

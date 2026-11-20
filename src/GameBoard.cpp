@@ -14,6 +14,18 @@ bool isValidDescendingSequence(const Card &upper, const Card &lower) {
 
   return upperRank == lowerRank + 1 && isRed(upper) != isRed(lower);
 }
+
+bool canPlaceOnFoundation(const Card &card, const Stack<Card> &foundation) {
+  if (foundation.isEmpty()) {
+    return card.getRank() == Rank::Ace;
+  }
+
+  const Card &topCard = foundation.top();
+
+  return card.getSuit() == topCard.getSuit() &&
+         static_cast<int>(card.getRank()) ==
+             static_cast<int>(topCard.getRank()) + 1;
+}
 } // namespace
 
 int GameBoard::getCardId(const Card &card) const {
@@ -177,11 +189,9 @@ bool GameBoard::moveTableauSequence(int sourceColumn, int sourcePosition,
     return false;
   }
 
-  // Count the consecutive face-up cards being moved.
   int sequenceLength = 1;
 
   while (sourcePosition + sequenceLength < tableau[sourceColumn].size()) {
-
     Card &upper =
         tableau[sourceColumn].getAt(sourcePosition + sequenceLength - 1);
 
@@ -198,7 +208,6 @@ bool GameBoard::moveTableauSequence(int sourceColumn, int sourcePosition,
     sequenceLength++;
   }
 
-  // Check whether the destination accepts the first card.
   if (tableau[destinationColumn].isEmpty()) {
     if (firstCard.getRank() != Rank::King) {
       return false;
@@ -212,21 +221,16 @@ bool GameBoard::moveTableauSequence(int sourceColumn, int sourcePosition,
     }
   }
 
-  // Extract the selected sequence.
-  // The temporary stack reverses it during extraction.
   Stack<Card> temporary;
 
   for (int i = 0; i < sequenceLength; i++) {
     temporary.push(tableau[sourceColumn].removeAt(sourcePosition));
   }
 
-  // Restore the original sequence order at the destination.
   while (!temporary.isEmpty()) {
     tableau[destinationColumn].pushFront(temporary.pop());
   }
 
-  // If the first card of the source column was moved,
-  // reveal the newly exposed card.
   if (sourcePosition == 0 && !tableau[sourceColumn].isEmpty()) {
     Card &exposedCard = tableau[sourceColumn].getAt(0);
 
@@ -237,6 +241,118 @@ bool GameBoard::moveTableauSequence(int sourceColumn, int sourcePosition,
 
   updateTableauLocations(sourceColumn);
   updateTableauLocations(destinationColumn);
+
+  return true;
+}
+
+// Move the visible card at the top of a tableau column
+// onto its matching foundation.
+bool GameBoard::moveTableauToFoundation(int sourceColumn) {
+  if (sourceColumn < 0 || sourceColumn >= 7 ||
+      tableau[sourceColumn].isEmpty()) {
+    return false;
+  }
+
+  Card &card = tableau[sourceColumn].getAt(0);
+
+  if (!card.isFaceUp()) {
+    return false;
+  }
+
+  int suit = static_cast<int>(card.getSuit());
+
+  if (!canPlaceOnFoundation(card, foundations[suit])) {
+    return false;
+  }
+
+  Card movedCard = tableau[sourceColumn].popFront();
+  foundations[suit].push(movedCard);
+
+  CardLocation *location = cardLocations.search(getCardId(movedCard));
+
+  if (location != nullptr) {
+    location->pile = PileType::Foundation;
+    location->pileIndex = suit;
+    location->position = foundations[suit].size() - 1;
+    location->faceUp = true;
+  }
+
+  // Reveal the next card in the tableau column.
+  if (!tableau[sourceColumn].isEmpty()) {
+    Card &exposedCard = tableau[sourceColumn].getAt(0);
+
+    if (!exposedCard.isFaceUp()) {
+      exposedCard.flip();
+    }
+  }
+
+  updateTableauLocations(sourceColumn);
+
+  return true;
+}
+
+// Move the top waste card onto a tableau column.
+bool GameBoard::moveWasteToTableau(int destinationColumn) {
+  if (destinationColumn < 0 || destinationColumn >= 7 || waste.isEmpty()) {
+    return false;
+  }
+
+  Card &card = waste.top();
+
+  if (tableau[destinationColumn].isEmpty()) {
+    if (card.getRank() != Rank::King) {
+      return false;
+    }
+  } else {
+    Card &destinationTop = tableau[destinationColumn].getAt(0);
+
+    if (!destinationTop.isFaceUp() ||
+        !isValidDescendingSequence(destinationTop, card)) {
+      return false;
+    }
+  }
+
+  Card movedCard = waste.pop();
+  tableau[destinationColumn].pushFront(movedCard);
+
+  CardLocation *location = cardLocations.search(getCardId(movedCard));
+
+  if (location != nullptr) {
+    location->pile = PileType::Tableau;
+    location->pileIndex = destinationColumn;
+    location->position = 0;
+    location->faceUp = true;
+  }
+
+  updateTableauLocations(destinationColumn);
+
+  return true;
+}
+
+// Move the top waste card onto its matching foundation.
+bool GameBoard::moveWasteToFoundation() {
+  if (waste.isEmpty()) {
+    return false;
+  }
+
+  Card &card = waste.top();
+  int suit = static_cast<int>(card.getSuit());
+
+  if (!canPlaceOnFoundation(card, foundations[suit])) {
+    return false;
+  }
+
+  Card movedCard = waste.pop();
+  foundations[suit].push(movedCard);
+
+  CardLocation *location = cardLocations.search(getCardId(movedCard));
+
+  if (location != nullptr) {
+    location->pile = PileType::Foundation;
+    location->pileIndex = suit;
+    location->position = foundations[suit].size() - 1;
+    location->faceUp = true;
+  }
 
   return true;
 }
@@ -284,8 +400,8 @@ CardLocation *GameBoard::getCardLocation(int cardId) {
 void GameBoard::display() {
   std::cout << "\n========== KLONDIKE SOLITAIRE ==========\n\n";
 
-  std::cout << "STOCK: " << stock.size() << " cards";
-  std::cout << "        WASTE: ";
+  std::cout << "STOCK: " << stock.size();
+  std::cout << " cards        WASTE: ";
 
   Card *wasteCard = getWasteTop();
 
@@ -308,7 +424,6 @@ void GameBoard::display() {
     std::cout << "Column " << column + 1 << ": ";
 
     for (int position = 0; position < tableau[column].size(); position++) {
-
       Card &card = tableau[column].getAt(position);
 
       if (!card.isFaceUp()) {

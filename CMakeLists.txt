@@ -72,3 +72,10 @@ add_executable(TableauMoveTest
 target_include_directories(TableauMoveTest PRIVATE include)
 add_test(NAME TableauMovementTest COMMAND TableauMoveTest)
 
+add_executable(FoundationMoveTest
+    tests/foundation_move_test.cpp
+    src/GameBoard.cpp
+    src/Deck.cpp
+)
+target_include_directories(FoundationMoveTest PRIVATE include)
+add_test(NAME FoundationMovementTest COMMAND FoundationMoveTest)
