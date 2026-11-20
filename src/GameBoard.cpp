@@ -112,26 +112,28 @@ void GameBoard::updateTableauLocations(int column) {
   }
 }
 
-bool GameBoard::drawFromStock() {
-  if (stock.isEmpty()) {
+bool GameBoard::drawFromStock(int count) {
+  if ((count != 1 && count != 3) || stock.isEmpty()) {
     return false;
   }
 
-  Card card = stock.dequeue();
+  for (int i = 0; i < count && !stock.isEmpty(); i++) {
+    Card card = stock.dequeue();
 
-  if (!card.isFaceUp()) {
-    card.flip();
-  }
+    if (!card.isFaceUp()) {
+      card.flip();
+    }
 
-  waste.push(card);
+    waste.push(card);
 
-  CardLocation *location = cardLocations.search(getCardId(card));
+    CardLocation *location = cardLocations.search(getCardId(card));
 
-  if (location != nullptr) {
-    location->pile = PileType::Waste;
-    location->pileIndex = 0;
-    location->position = waste.size() - 1;
-    location->faceUp = true;
+    if (location != nullptr) {
+      location->pile = PileType::Waste;
+      location->pileIndex = 0;
+      location->position = waste.size() - 1;
+      location->faceUp = true;
+    }
   }
 
   updateStockLocations();

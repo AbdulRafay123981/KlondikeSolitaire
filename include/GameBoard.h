@@ -34,7 +34,7 @@ public:
   void initialize();
   void display();
 
-  bool drawFromStock();
+  bool drawFromStock(int count = 1);
   bool recycleWaste();
 
   bool moveTableauSequence(int sourceColumn, int sourcePosition,

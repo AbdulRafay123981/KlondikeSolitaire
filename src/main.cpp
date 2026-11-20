@@ -10,11 +10,16 @@ int main() {
   board.initialize();
 
   char command;
+  int drawCount = 1;
 
   while (true) {
     board.display();
 
+    std::cout << "\nDraw mode: " << drawCount << "\n";
+
     std::cout << "\nCommands:\n";
+    std::cout << "1 = Draw-one mode\n";
+    std::cout << "3 = Draw-three mode\n";
     std::cout << "D = Draw from stock\n";
     std::cout << "R = Recycle waste\n";
     std::cout << "M = Move tableau sequence\n";
@@ -28,10 +33,18 @@ int main() {
 
     std::cin >> command;
 
-    if (command == 'D' || command == 'd') {
+    if (command == '1') {
+      drawCount = 1;
+      std::cout << "\nDraw-one mode selected.\n";
+
+    } else if (command == '3') {
+      drawCount = 3;
+      std::cout << "\nDraw-three mode selected.\n";
+
+    } else if (command == 'D' || command == 'd') {
       GameBoard previousState = board;
 
-      if (board.drawFromStock()) {
+      if (board.drawFromStock(drawCount)) {
         history.record(previousState);
       } else {
         std::cout << "\nStock is empty. Recycle the waste first.\n";

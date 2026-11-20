@@ -96,3 +96,12 @@ add_executable(GameHistoryTest
 )
 target_include_directories(GameHistoryTest PRIVATE include)
 add_test(NAME GameHistoryTest COMMAND GameHistoryTest)
+
+
+add_executable(DrawModeTest
+    tests/draw_mode_test.cpp
+    src/GameBoard.cpp
+    src/Deck.cpp
+)
+target_include_directories(DrawModeTest PRIVATE include)
+add_test(NAME DrawModeTest COMMAND DrawModeTest)
