@@ -41,3 +41,11 @@ add_executable(QueueTest
 target_include_directories(QueueTest PRIVATE include)
 
 add_test(NAME QueueFunctionalityTest COMMAND QueueTest)
+
+add_executable(LinkedListTest
+    tests/linked_list_test.cpp
+)
+
+target_include_directories(LinkedListTest PRIVATE include)
+
+add_test(NAME LinkedListFunctionalityTest COMMAND LinkedListTest)
