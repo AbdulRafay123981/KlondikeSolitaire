@@ -11,7 +11,6 @@ int GameBoard::getCardId(const Card &card) const {
 }
 
 void GameBoard::initialize() {
-  // Reset all piles.
   for (int i = 0; i < 7; i++) {
     tableau[i].clear();
   }
@@ -26,7 +25,7 @@ void GameBoard::initialize() {
   Deck deck;
   deck.shuffle();
 
-  // Deal cards into the seven tableau columns.
+  // Deal the seven tableau columns.
   for (int column = 0; column < 7; column++) {
     for (int row = 0; row <= column; row++) {
       Card card = deck.draw();
@@ -47,7 +46,7 @@ void GameBoard::initialize() {
     }
   }
 
-  // Put the remaining cards into the stock.
+  // Put the remaining cards into stock.
   while (!deck.isEmpty()) {
     Card card = deck.draw();
     stock.enqueue(card);
@@ -60,6 +59,88 @@ void GameBoard::initialize() {
 
     cardLocations.insert(getCardId(card), location);
   }
+}
+
+void GameBoard::updateStockLocations() {
+  for (int i = 0; i < stock.size(); i++) {
+    Card &card = stock.at(i);
+
+    CardLocation *location = cardLocations.search(getCardId(card));
+
+    if (location != nullptr) {
+      location->pile = PileType::Stock;
+      location->pileIndex = 0;
+      location->position = i;
+      location->faceUp = card.isFaceUp();
+    }
+  }
+}
+
+bool GameBoard::drawFromStock() {
+  if (stock.isEmpty()) {
+    return false;
+  }
+
+  Card card = stock.dequeue();
+
+  // A card becomes visible when drawn.
+  if (!card.isFaceUp()) {
+    card.flip();
+  }
+
+  waste.push(card);
+
+  // Update the drawn card's location.
+  CardLocation *location = cardLocations.search(getCardId(card));
+
+  if (location != nullptr) {
+    location->pile = PileType::Waste;
+    location->pileIndex = 0;
+    location->position = waste.size() - 1;
+    location->faceUp = true;
+  }
+
+  // The remaining stock positions have shifted.
+  updateStockLocations();
+
+  return true;
+}
+
+bool GameBoard::recycleWaste() {
+  if (!stock.isEmpty() || waste.isEmpty()) {
+    return false;
+  }
+
+  Stack<Card> temporary;
+
+  // First transfer: waste -> temporary stack.
+  // This reverses the order.
+  while (!waste.isEmpty()) {
+    temporary.push(waste.pop());
+  }
+
+  // Second transfer: temporary stack -> stock.
+  // This restores the original draw order.
+  while (!temporary.isEmpty()) {
+    Card card = temporary.pop();
+
+    if (card.isFaceUp()) {
+      card.flip();
+    }
+
+    stock.enqueue(card);
+
+    CardLocation *location = cardLocations.search(getCardId(card));
+
+    if (location != nullptr) {
+      location->pile = PileType::Stock;
+      location->pileIndex = 0;
+      location->position = stock.size() - 1;
+      location->faceUp = false;
+    }
+  }
+
+  return true;
 }
 
 int GameBoard::getTableauSize(int column) const {
@@ -82,6 +163,14 @@ int GameBoard::getStockSize() const { return stock.size(); }
 
 int GameBoard::getWasteSize() const { return waste.size(); }
 
+Card *GameBoard::getWasteTop() {
+  if (waste.isEmpty()) {
+    return nullptr;
+  }
+
+  return &waste.top();
+}
+
 int GameBoard::getFoundationSize(int suit) const {
   if (suit < 0 || suit >= 4) {
     throw std::out_of_range("Invalid foundation pile.");
@@ -100,13 +189,13 @@ void GameBoard::display() {
   std::cout << "STOCK: " << stock.size() << " cards";
   std::cout << "        WASTE: ";
 
-  if (waste.isEmpty()) {
+  Card *wasteCard = getWasteTop();
+
+  if (wasteCard == nullptr) {
     std::cout << "--";
   } else {
-    Card &card = waste.top();
-
-    std::cout << static_cast<int>(card.getRank()) << " of suit "
-              << static_cast<int>(card.getSuit());
+    std::cout << static_cast<int>(wasteCard->getRank()) << " of suit "
+              << static_cast<int>(wasteCard->getSuit());
   }
 
   std::cout << "\n\nFOUNDATIONS:\n";

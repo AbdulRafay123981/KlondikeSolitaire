@@ -12,7 +12,6 @@ add_executable(KlondikeSolitaire
     src/Deck.cpp
     src/GameBoard.cpp
 )
-
 target_include_directories(KlondikeSolitaire PRIVATE include)
 
 # Testing
@@ -56,4 +55,12 @@ add_executable(GameBoardTest
 )
 target_include_directories(GameBoardTest PRIVATE include)
 add_test(NAME GameBoardTest COMMAND GameBoardTest)
+
+add_executable(StockTest
+    tests/stock_test.cpp
+    src/GameBoard.cpp
+    src/Deck.cpp
+)
+target_include_directories(StockTest PRIVATE include)
+add_test(NAME StockFunctionalityTest COMMAND StockTest)
 

@@ -3,55 +3,81 @@
 
 #include <stdexcept>
 
-template <typename T, int Capacity = 52> class Queue {
+template <typename T, int Capacity = 52>
+class Queue {
 private:
-  T items[Capacity];
-  int frontIndex = 0;
-  int rearIndex = -1;
-  int count = 0;
+    T items[Capacity];
+    int frontIndex = 0;
+    int rearIndex = -1;
+    int count = 0;
 
 public:
-  void enqueue(const T &item) {
-    if (isFull()) {
-      throw std::overflow_error("Queue is full.");
+    void enqueue(const T& item) {
+        if (isFull()) {
+            throw std::overflow_error("Queue is full.");
+        }
+
+        rearIndex = (rearIndex + 1) % Capacity;
+        items[rearIndex] = item;
+        count++;
     }
 
-    rearIndex = (rearIndex + 1) % Capacity;
-    items[rearIndex] = item;
-    count++;
-  }
+    T dequeue() {
+        if (isEmpty()) {
+            throw std::underflow_error("Queue is empty.");
+        }
 
-  T dequeue() {
-    if (isEmpty()) {
-      throw std::underflow_error("Queue is empty.");
+        T item = items[frontIndex];
+        frontIndex = (frontIndex + 1) % Capacity;
+        count--;
+
+        return item;
     }
 
-    T item = items[frontIndex];
-    frontIndex = (frontIndex + 1) % Capacity;
-    count--;
+    T& front() {
+        if (isEmpty()) {
+            throw std::underflow_error("Queue is empty.");
+        }
 
-    return item;
-  }
-
-  T &front() {
-    if (isEmpty()) {
-      throw std::underflow_error("Queue is empty.");
+        return items[frontIndex];
     }
 
-    return items[frontIndex];
-  }
+    T& at(int index) {
+        if (index < 0 || index >= count) {
+            throw std::out_of_range("Invalid queue index.");
+        }
 
-  bool isEmpty() const { return count == 0; }
+        int actualIndex = (frontIndex + index) % Capacity;
+        return items[actualIndex];
+    }
 
-  bool isFull() const { return count == Capacity; }
+    const T& at(int index) const {
+        if (index < 0 || index >= count) {
+            throw std::out_of_range("Invalid queue index.");
+        }
 
-  int size() const { return count; }
+        int actualIndex = (frontIndex + index) % Capacity;
+        return items[actualIndex];
+    }
 
-  void clear() {
-    frontIndex = 0;
-    rearIndex = -1;
-    count = 0;
-  }
+    bool isEmpty() const {
+        return count == 0;
+    }
+
+    bool isFull() const {
+        return count == Capacity;
+    }
+
+    int size() const {
+        return count;
+    }
+
+    void clear() {
+        frontIndex = 0;
+        rearIndex = -1;
+        count = 0;
+    }
 };
 
 #endif
+

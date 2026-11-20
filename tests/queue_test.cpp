@@ -7,11 +7,10 @@
 int main() {
   Queue<int, 3> queue;
 
-  // New queue should be empty.
   assert(queue.isEmpty());
   assert(queue.size() == 0);
 
-  // Test enqueue and FIFO order.
+  // Enqueue and FIFO order.
   queue.enqueue(10);
   queue.enqueue(20);
   queue.enqueue(30);
@@ -20,7 +19,7 @@ int main() {
   assert(queue.size() == 3);
   assert(queue.front() == 10);
 
-  // Test overflow.
+  // Overflow.
   bool overflowCaught = false;
 
   try {
@@ -31,19 +30,17 @@ int main() {
 
   assert(overflowCaught);
 
-  // Remove the first item, then insert another.
-  // This makes the rear index wrap around.
+  // Circular wraparound.
   assert(queue.dequeue() == 10);
   queue.enqueue(40);
 
-  // Remaining items must still follow FIFO order.
   assert(queue.dequeue() == 20);
   assert(queue.dequeue() == 30);
   assert(queue.dequeue() == 40);
 
   assert(queue.isEmpty());
 
-  // Test underflow.
+  // Underflow.
   bool underflowCaught = false;
 
   try {
@@ -54,13 +51,46 @@ int main() {
 
   assert(underflowCaught);
 
-  // Test clear.
+  // Clear.
   queue.enqueue(50);
   queue.enqueue(60);
   queue.clear();
 
   assert(queue.isEmpty());
   assert(queue.size() == 0);
+
+  // Indexed access.
+  Queue<int, 5> indexedQueue;
+
+  indexedQueue.enqueue(10);
+  indexedQueue.enqueue(20);
+  indexedQueue.enqueue(30);
+
+  assert(indexedQueue.at(0) == 10);
+  assert(indexedQueue.at(1) == 20);
+  assert(indexedQueue.at(2) == 30);
+
+  // Indexed access after circular wraparound.
+  indexedQueue.dequeue();
+  indexedQueue.dequeue();
+
+  indexedQueue.enqueue(40);
+  indexedQueue.enqueue(50);
+
+  assert(indexedQueue.at(0) == 30);
+  assert(indexedQueue.at(1) == 40);
+  assert(indexedQueue.at(2) == 50);
+
+  // Invalid index.
+  bool invalidIndexCaught = false;
+
+  try {
+    indexedQueue.at(3);
+  } catch (const std::out_of_range &) {
+    invalidIndexCaught = true;
+  }
+
+  assert(invalidIndexCaught);
 
   std::cout << "All Queue tests passed!\n";
 

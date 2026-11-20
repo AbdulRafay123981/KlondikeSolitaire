@@ -27,16 +27,22 @@ private:
   HashMap<CardLocation> cardLocations;
 
   int getCardId(const Card &card) const;
+  void updateStockLocations();
 
 public:
   void initialize();
   void display();
+
+  bool drawFromStock();
+  bool recycleWaste();
 
   int getTableauSize(int column) const;
   Card &getTableauCard(int column, int position);
 
   int getStockSize() const;
   int getWasteSize() const;
+  Card *getWasteTop();
+
   int getFoundationSize(int suit) const;
 
   CardLocation *getCardLocation(int cardId);
