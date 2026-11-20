@@ -1,6 +1,10 @@
-#include <iostream>
+#include "GameBoard.h"
 
 int main() {
-  std::cout << "Klondike Solitaire\n";
+  GameBoard board;
+
+  board.initialize();
+  board.display();
+
   return 0;
 }
