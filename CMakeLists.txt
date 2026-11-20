@@ -64,3 +64,11 @@ add_executable(StockTest
 target_include_directories(StockTest PRIVATE include)
 add_test(NAME StockFunctionalityTest COMMAND StockTest)
 
+add_executable(TableauMoveTest
+    tests/tableau_move_test.cpp
+    src/GameBoard.cpp
+    src/Deck.cpp
+)
+target_include_directories(TableauMoveTest PRIVATE include)
+add_test(NAME TableauMovementTest COMMAND TableauMoveTest)
+

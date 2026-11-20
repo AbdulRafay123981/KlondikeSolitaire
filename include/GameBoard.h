@@ -28,6 +28,7 @@ private:
 
   int getCardId(const Card &card) const;
   void updateStockLocations();
+  void updateTableauLocations(int column);
 
 public:
   void initialize();
@@ -35,6 +36,9 @@ public:
 
   bool drawFromStock();
   bool recycleWaste();
+
+  bool moveTableauSequence(int sourceColumn, int sourcePosition,
+                           int destinationColumn);
 
   int getTableauSize(int column) const;
   Card &getTableauCard(int column, int position);

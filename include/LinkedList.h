@@ -20,16 +20,13 @@ public:
 
   ~LinkedList() { clear(); }
 
-  // Prevent accidental shallow copies of the nodes.
   LinkedList(const LinkedList &) = delete;
   LinkedList &operator=(const LinkedList &) = delete;
 
   void pushFront(const T &item) {
     Node *newNode = new Node(item);
-
     newNode->next = head;
     head = newNode;
-
     count++;
   }
 
@@ -43,7 +40,31 @@ public:
 
     head = head->next;
     delete oldHead;
+    count--;
 
+    return item;
+  }
+
+  T removeAt(int index) {
+    if (index < 0 || index >= count) {
+      throw std::out_of_range("Invalid linked list index.");
+    }
+
+    if (index == 0) {
+      return popFront();
+    }
+
+    Node *previous = head;
+
+    for (int i = 0; i < index - 1; i++) {
+      previous = previous->next;
+    }
+
+    Node *target = previous->next;
+    T item = target->data;
+
+    previous->next = target->next;
+    delete target;
     count--;
 
     return item;
