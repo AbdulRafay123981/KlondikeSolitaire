@@ -49,3 +49,8 @@ add_executable(LinkedListTest
 target_include_directories(LinkedListTest PRIVATE include)
 
 add_test(NAME LinkedListFunctionalityTest COMMAND LinkedListTest)
+
+
+add_executable(hash_map_test tests/hash_map_test.cpp)
+target_include_directories(hash_map_test PRIVATE include)
+add_test(NAME HashMapTest COMMAND hash_map_test)
