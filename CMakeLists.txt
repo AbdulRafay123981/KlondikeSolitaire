@@ -13,3 +13,14 @@ add_executable(KlondikeSolitaire
 )
 
 target_include_directories(KlondikeSolitaire PRIVATE include)
+
+enable_testing()
+
+add_executable(DeckTest
+    tests/deck_test.cpp
+    src/Deck.cpp
+)
+
+target_include_directories(DeckTest PRIVATE include)
+
+add_test(NAME DeckFunctionalityTest COMMAND DeckTest)
