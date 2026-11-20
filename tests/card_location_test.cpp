@@ -118,12 +118,64 @@ void testFoundationMovementLocations() {
   assert(foundMove);
 }
 
+void testWasteToTableauLocations() {
+  GameBoard board;
+  bool foundMove = false;
+
+  for (int attempt = 0; attempt < 1000 && !foundMove; attempt++) {
+    board.initialize();
+    assert(board.validateCardLocations());
+
+    while (board.getStockSize() > 0 && !foundMove) {
+      assert(board.drawFromStock(1));
+      assert(board.validateCardLocations());
+
+      for (int destination = 0; destination < 7 && !foundMove; destination++) {
+        if (board.moveWasteToTableau(destination)) {
+          foundMove = true;
+          assert(board.validateCardLocations());
+        }
+      }
+    }
+  }
+
+  assert(foundMove);
+}
+
+void testWasteToFoundationLocations() {
+  GameBoard board;
+  bool foundMove = false;
+
+  for (int attempt = 0; attempt < 1000 && !foundMove; attempt++) {
+    board.initialize();
+    assert(board.validateCardLocations());
+
+    while (board.getStockSize() > 0 && !foundMove) {
+      assert(board.drawFromStock(1));
+      assert(board.validateCardLocations());
+
+      Card *card = board.getWasteTop();
+
+      if (card->getRank() == Rank::Ace) {
+        assert(board.moveWasteToFoundation());
+
+        foundMove = true;
+        assert(board.validateCardLocations());
+      }
+    }
+  }
+
+  assert(foundMove);
+}
+
 int main() {
   testInitialLocations();
   testDrawAndRecycleLocations();
   testUndoRedoLocations();
   testTableauMovementLocations();
   testFoundationMovementLocations();
+  testWasteToTableauLocations();
+  testWasteToFoundationLocations();
 
   std::cout << "All card location consistency tests passed!\n";
 
