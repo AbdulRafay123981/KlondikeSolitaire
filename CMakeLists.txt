@@ -79,3 +79,11 @@ add_executable(FoundationMoveTest
 )
 target_include_directories(FoundationMoveTest PRIVATE include)
 add_test(NAME FoundationMovementTest COMMAND FoundationMoveTest)
+
+add_executable(WinConditionTest
+    tests/win_condition_test.cpp
+    src/GameBoard.cpp
+    src/Deck.cpp
+)
+target_include_directories(WinConditionTest PRIVATE include)
+add_test(NAME WinConditionTest COMMAND WinConditionTest)

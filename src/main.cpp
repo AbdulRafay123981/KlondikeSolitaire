@@ -87,6 +87,12 @@ int main() {
     } else {
       std::cout << "\nInvalid command.\n";
     }
+
+    if (board.hasWon()) {
+      board.display();
+      std::cout << "\n🎉 CONGRATULATIONS! YOU WON! 🎉\n";
+      break;
+    }
   }
 
   return 0;

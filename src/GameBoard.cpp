@@ -357,6 +357,16 @@ bool GameBoard::moveWasteToFoundation() {
   return true;
 }
 
+bool GameBoard::hasWon() const {
+  for (int suit = 0; suit < 4; suit++) {
+    if (foundations[suit].size() != 13) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 int GameBoard::getTableauSize(int column) const {
   if (column < 0 || column >= 7) {
     throw std::out_of_range("Invalid tableau column.");

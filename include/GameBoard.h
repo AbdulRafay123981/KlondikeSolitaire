@@ -44,6 +44,8 @@ public:
   bool moveWasteToTableau(int destinationColumn);
   bool moveWasteToFoundation();
 
+  bool hasWon() const;
+
   int getTableauSize(int column) const;
   Card &getTableauCard(int column, int position);
 
