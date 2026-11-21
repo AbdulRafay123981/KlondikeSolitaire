@@ -67,6 +67,48 @@ int main() {
   assert(list.isEmpty());
   assert(list.size() == 0);
 
+  // Test copy constructor.
+  LinkedList<int> original;
+  original.pushFront(30);
+  original.pushFront(20);
+  original.pushFront(10);
+
+  LinkedList<int> copied(original);
+
+  assert(copied.size() == 3);
+  assert(copied.getAt(0) == 10);
+  assert(copied.getAt(1) == 20);
+  assert(copied.getAt(2) == 30);
+
+  // Changing the copy must not change the original.
+  copied.popFront();
+
+  assert(copied.size() == 2);
+  assert(original.size() == 3);
+  assert(original.getAt(0) == 10);
+
+  // Test copy assignment.
+  LinkedList<int> assigned;
+  assigned.pushFront(999);
+  assigned = original;
+
+  assert(assigned.size() == 3);
+  assert(assigned.getAt(0) == 10);
+  assert(assigned.getAt(1) == 20);
+  assert(assigned.getAt(2) == 30);
+
+  // Changing the assigned list must not change the original.
+  assigned.popFront();
+
+  assert(assigned.size() == 2);
+  assert(original.size() == 3);
+
+  // Test self-assignment.
+  original = original;
+
+  assert(original.size() == 3);
+  assert(original.getAt(0) == 10);
+
   std::cout << "All Linked List tests passed!\n";
 
   return 0;
