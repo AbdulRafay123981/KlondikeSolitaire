@@ -1,0 +1,3 @@
+I:/Year 2/Semester 3/DSA/Projects/KlondikeSolitaire/gui/build/CMakeFiles/KlondikeGUI.dir
+I:/Year 2/Semester 3/DSA/Projects/KlondikeSolitaire/gui/build/CMakeFiles/edit_cache.dir
+I:/Year 2/Semester 3/DSA/Projects/KlondikeSolitaire/gui/build/CMakeFiles/rebuild_cache.dir

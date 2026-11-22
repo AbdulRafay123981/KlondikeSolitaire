@@ -1,0 +1,12 @@
+# ninja log v7
+65	5041	8170396774702437	CMakeFiles/KlondikeGUI.dir/I_/Year_2/Semester_3/DSA/Projects/KlondikeSolitaire/src/Deck.cpp.obj	d82e1cec18ee94e4
+70	5079	8170396774702437	CMakeFiles/KlondikeGUI.dir/I_/Year_2/Semester_3/DSA/Projects/KlondikeSolitaire/src/GameBoard.cpp.obj	3688e1e60d374b92
+48	12664	8170396774546192	CMakeFiles/KlondikeGUI.dir/main.cpp.obj	8b9246a2068a9aea
+53	12932	8170396774546192	CMakeFiles/KlondikeGUI.dir/MainWindow.cpp.obj	17e1e4806ab947c0
+12932	14046	8170396903356011	KlondikeGUI.exe	7571ec6295de376c
+195	2870	8170412111639484	CMakeFiles/KlondikeGUI.dir/main.cpp.obj	8b9246a2068a9aea
+2871	3325	8170412138404055	KlondikeGUI.exe	7571ec6295de376c
+24	6774	8170412614099752	CMakeFiles/KlondikeGUI.dir/main.cpp.obj	8b9246a2068a9aea
+6776	7291	8170412681625080	KlondikeGUI.exe	7571ec6295de376c
+28	2885	8170493918919796	CMakeFiles/KlondikeGUI.dir/main.cpp.obj	8b9246a2068a9aea
+2886	3481	8170493947498991	KlondikeGUI.exe	7571ec6295de376c
