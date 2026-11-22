@@ -35,6 +35,18 @@ int GameBoard::getCardId(const Card &card) const {
   return suit * 13 + (rank - 1);
 }
 
+Card &GameBoard::getStockCard(int position) { return stock.at(position); }
+
+Card &GameBoard::getWasteCard(int position) { return waste.at(position); }
+
+Card &GameBoard::getFoundationCard(int suit, int position) {
+  if (suit < 0 || suit >= 4) {
+    throw std::out_of_range("Invalid foundation pile.");
+  }
+
+  return foundations[suit].at(position);
+}
+
 void GameBoard::initialize() {
   for (int i = 0; i < 7; i++) {
     tableau[i].clear();

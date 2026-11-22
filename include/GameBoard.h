@@ -50,6 +50,10 @@ public:
   int getTableauSize(int column) const;
   Card &getTableauCard(int column, int position);
 
+  Card &getStockCard(int position);
+  Card &getWasteCard(int position);
+  Card &getFoundationCard(int suit, int position);
+
   int getStockSize() const;
   int getWasteSize() const;
   Card *getWasteTop();
